@@ -1,19 +1,6 @@
-const setting = require("./setting.js");
-const {  printLine, printHeading } = require("./printer.js");
+import {setting,BOATS,iconsShow} from "./setting.js"
+import {printLine,printHeading} from "./printer.js"
 
-const BOATS = [
-  setting.SHIPS.lancha,
-  setting.SHIPS.crucero,
-  setting.SHIPS.submarino,
-  setting.SHIPS.buque,
-  setting.SHIPS.portaaviones,
-];
-
-const iconsShow = [
-  setting.UTILS.FAIL,
-  setting.UTILS.SUNKEN,
-  setting.UTILS.HIT,
-];
 
 /**
  * @param {{icon:string, boat: {name: string, icon:string, lives: number, LENGTH: number} | null}[][]} board

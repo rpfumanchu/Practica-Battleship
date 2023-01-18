@@ -1,8 +1,8 @@
 const { initializeArrayAttacks, BOATS } = require("./funciones.js");
 
 const setting = require("./setting.js");
-
-import {initializeArrayAttacks} from ".function.js"
+import {setting,BOATS} from "./setting.js"
+import {initializeArrayAttacks} from "./function.js"
 
 export class Players {
   constructor(name) {
