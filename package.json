@@ -1,0 +1,21 @@
+{
+  "name": "practica-battleship",
+  "version": "1.0.0",
+  "description": "- 2 Jugadores\r - 2 tableros por jugador (el propio y el del adversario)\r - Los tableros tendrán 10 filas y 10 columnas\r - Las naves a colocar son las siguientes:\r     - 1 Portaaviones (5 casillas)\r     - 1 Buque (4 casillas)\r     - 2 Submarinos (3 casillas)\r     - 3 Cruceros (2 casillas)\r     - 3 lanchas (1 casilla)\r - La cantidad de disparos de cada jugador permitidos son 10 filas x 10 columnas =\r 100 disparos",
+  "main": "Player.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpfumanchu/Practica-Battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpfumanchu/Practica-Battleship/issues"
+  },
+  "homepage": "https://github.com/rpfumanchu/Practica-Battleship#readme",
+  "type": "module"
+}
