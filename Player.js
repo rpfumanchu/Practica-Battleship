@@ -1,6 +1,7 @@
 import { setting,BOATS } from "./setting.js";
 import { initializeArrayAttacks } from "./function.js";
 
+//TODO✅
 export class Players {
   constructor(name) {
     this.name = name;
@@ -18,6 +19,7 @@ export class Players {
     this.bullets--;
   }
 
+  // condición para seguir jugando
   keepPlaying() {
     return this.bullets > 0 && this.calculateLivesShips() > 0;
   }
@@ -32,6 +34,7 @@ export class Players {
     this.createAllShips();
   }
 
+  //TODO✅ necesito saber las vidas de los barcos para más tarde poder restarle esas vidas
   calculateLivesShips() {
     const livesBoatsMapped = this.ships.map((boat) => boat.lives);
     const totalLives = livesBoatsMapped.reduce(
@@ -39,6 +42,7 @@ export class Players {
     return totalLives;
   }
 
+  //TODO✅
   createBoard() {
     for (let i = 0; i < setting.UTILS.ROWS; i++) {
       this.board[i] = [];
@@ -49,11 +53,12 @@ export class Players {
     }
   }
 
+  //TODO✅
   playerShips() {
     BOATS.forEach((elem) => {
       const currentShip = elem;
       for (let j = 0; j < currentShip.count; j++) {
-        let boat = {
+        const boat = {
           name: `${currentShip.name} #${j}`,
           icon: currentShip.icon,
           lives: currentShip.lives,
@@ -64,10 +69,12 @@ export class Players {
     });
   }
 
+
+  //TODO ✅
   createBoat(allShips) {
     let boatCreated = false;
     while (!boatCreated) {
-      let directionRandom = this.direction();
+      const directionRandom = this.direction();
       let validPositions;
       if (directionRandom == 0) {
         validPositions = this.horizontalValidPositions(allShips);
@@ -86,26 +93,27 @@ export class Players {
     }
   }
 
+  //TODO✅
   createAllShips() {
     for (let i = 0; i < this.ships.length; i++) {
-      let allShips = this.ships[i];
+      const allShips = this.ships[i];
       this.createBoat(allShips);
     }
   }
 
+  //TODO✅ número aleatorio entre 0 y 1 para posteriormente identificar dirección
   direction() {
     return Math.floor(Math.random() * 2);
   }
 
+  //TODO✅ posiciones verticales válidas y aleatorias
   /**
    * @param {{name: string;icon: string; lives: number;LENGTH: number;}} allShips
    */
   verticalValidPositions(allShips) {
-    let validPositions = [];
+    const validPositions = [];
     const col = Math.floor(Math.random() * this.board.length);
-    const row = Math.floor(
-      Math.random() * (this.board.length - allShips.LENGTH + 1)
-    );
+    const row = Math.floor(Math.random() * (this.board.length - allShips.LENGTH + 1));
     for (let i = 0; i < allShips.LENGTH; i++) {
       const position = this.board[row + i][col];
       if (!position.boat) {
@@ -115,12 +123,14 @@ export class Players {
     return validPositions;
   }
 
+  //TODO✅ posiciones horizontales válidas y aleatorias
+  /**
+   * @param {{name: string;icon: string; lives: number;LENGTH: number;}} allShips
+   */
   horizontalValidPositions(allShips) {
-    let validPositions = [];
+    const validPositions = [];
     const row = Math.floor(Math.random() * this.board.length);
-    const col = Math.floor(
-      Math.random() * (this.board.length - allShips.LENGTH + 1)
-    );
+    const col = Math.floor(Math.random() * (this.board.length - allShips.LENGTH + 1));
     for (let i = 0; i < allShips.LENGTH; i++) {
       const position = this.board[row][col + i];
       if (!position.boat) {
