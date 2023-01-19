@@ -1,5 +1,5 @@
-import {setting,BOATS,iconsShow} from "./setting.js"
-import {printLine,printHeading} from "./printer.js"
+import {setting,iconsShow} from "./setting.js"
+import {printLine,printHitShot,printFailedShot} from "./printer.js"
 
 
 /**
@@ -17,7 +17,7 @@ export function paintBoardLetters(board) {
   console.table(showBoard);
 }
 // esta funcion la uso para cambiar los números de las row por letras en las funciones de los tableros
-function rowToASCII(row) {
+export function rowToASCII(row) {
   row = parseInt(row);
   return String.fromCharCode("A".charCodeAt(0) + row);
 }
@@ -76,7 +76,7 @@ function smartAttack(row, col, attacker, advocate) {
   if(!attacker.bulletsRemain()) return;
   if(!advocate.calculateLivesShips()) return;
 
-  arrayPossibleShots = []
+  let arrayPossibleShots = []
   const maxColIndex = setting.UTILS.COLS-1;
   const maxRowIndex = setting.UTILS.ROWS-1;
   //✅calculo los posibles disparos alrededor de una posición atacada
@@ -130,30 +130,17 @@ function waterHeaddressSunken(advocate, row, col, attacker) {
   col = parseInt(col);
   const position = advocate.board[row][col];
 
-  //✅resto una vida por cada disparo
+  //✅ resto una vida por cada disparo
   attacker.subtractBullets();
 
   if (!position.boat) {
     position.icon = setting.UTILS.FAIL;
-    printLine(`     Tablero de ${attacker.name}`)
-    paintBoardLetters(attacker.board)
-    printLine(` ${attacker.name} Apunta y Dispara`);
-    console.log(`UPSSS!!! Agua en la posición: ${rowToASCII(row)} | ${col}`);
-    printLine(`---Tablero ofuscado de ${advocate.name}---`)
-    obfuscatedBoard(advocate.board);
-    printLine(`¡¡¡${attacker.name} despues de disparar te quedan ${attacker.bullets} Balas!!!`);
+    printFailedShot(advocate, row, col, attacker)
 
   } else {
     position.boat.lives--;
     position.icon = setting.UTILS.HIT;
-    printLine(`     Tablero de ${attacker.name}`)
-    paintBoardLetters(attacker.board)
-    printLine(` ${attacker.name} Apunta y Dispara`);
-    console.log(`Tocado en la position: ${rowToASCII(row)} | ${col}`);
-    console.log("En el blanco, vuelve disparar");
-    printLine(`---Tablero ofuscado de ${advocate.name}---`)
-    obfuscatedBoard(advocate.board);
-    printLine(`¡¡¡${attacker.name} despues de disparar te quedan ${attacker.bullets} Balas!!!`);
+    printHitShot(advocate, row, col, attacker)
     
     if (!position.boat.lives) {
       searchShipSink(advocate.board, position.boat);
@@ -236,13 +223,4 @@ export function isVictory(attacker, advocate) {
   }
 }
 
-module.exports = {
-  initializeArrayAttacks,
-  attack,
-  smartAttack,
-  obfuscatedBoard,
-  paintBoardIcons,
-  isVictory,
-  paintBoardLetters,
-  BOATS,
-};
+
