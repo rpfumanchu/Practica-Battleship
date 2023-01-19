@@ -16,15 +16,15 @@
 
 
 ## Está permitido:
-- Se pueden poner barcos pegados entre sí, por ejemplo, tendríamos 1 submarino
+- Se pueden poner ships pegados entre sí, por ejemplo, tendríamos 1 submarino
 vertical (A1, B1, C1) y 1 lancha pegada al lado (B2).
 
 ## No está permitido:
-- La posición de los barcos en diferentes ejecuciones del simulador no puede
+- La posición de los ships en diferentes ejecuciones del simulador no puede
 ser la misma. Tiene que haber un poco de aleatoriedad en la colocación de los
-barcos. Por lo tanto, no puede ser que los barcos tengan siempre la misma
+ships. Por lo tanto, no puede ser que los ships tengan siempre la misma
 distribución en la parrilla.
-- No se pueden solapar los barcos (es decir, una plaza ya ocupada por un barco no
+- No se pueden solapar los ships (es decir, una plaza ya ocupada por un barco no
 puede ser ocupada por otro barco). Ya sé que los submarinos van por debajo del
 agua, pero no cuela, no pueden solaparse.
 - Las naves no pueden estar colocadas en diagonal, únicamente en horizontal o
@@ -36,7 +36,7 @@ puede poner un portaaviones así (hay un salto de línea entre B y C
 - La selección de casillas oponentes de forma aleatoria, siempre y cuando respete el
 siguiente punto (no permitido)
 ### No está permitido
-- Seleccionar casillas de barcos directamente del oponente. Esto sería hacer
+- Seleccionar casillas de ships directamente del oponente. Esto sería hacer
 trampas, mirar el tablero del oponente para saber dónde están sus naves…
 - Seleccionar casillas que ya han sido seleccionadas previamente. No podéis
 disparar ahí donde habéis disparado.
@@ -57,7 +57,7 @@ importa)
 cualquier representación que queráis siempre y cuando sean diferentes entre sí):
     - vacío
     - agua
-    - barco (puede ser una única para todos los barcos o diferente para cada tipo
+    - barco (puede ser una única para todos los ships o diferente para cada tipo
 de barco)
     - tocado
 - El programa deberá mostrar la colocación de las naves en el tablero propio del
@@ -69,4 +69,4 @@ del jugador, y los tableros del jugador que está disparando (el propio y el aje
 la casilla ya marcada, sea agua o tocado.
 - Cuando termine la partida, deberá mostrarse por pantalla qué jugador ha ganado.
 - Deberá mostrarse también por pantalla el tablero propio del jugador 1 y el tablero
-propio del jugador 2, para poder visualizar los barcos que han quedado sin hundir
+propio del jugador 2, para poder visualizar los ships que han quedado sin hundir

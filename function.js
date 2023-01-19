@@ -1,5 +1,9 @@
 import {setting,iconsShow} from "./setting.js"
-import {printLine,printHitShot,printFailedShot} from "./printer.js"
+import {printLine,
+  printAttackerHitShot,
+  printAttackerFailedShot,
+  defenderWins,
+  attackerWins} from "./printer.js"
 
 
 /**
@@ -95,12 +99,12 @@ function smartAttack(row, col, attacker, advocate) {
   //console.log("disparos que quedan antes de disparo",advocate.attacks);
   //console.log()
   //console.log("arrayposDis",arrayPossibleShots);
-  // necesito los posibles disparos que quedan en advocate.attacks
+  //✅ necesito los posibles disparos que quedan en advocate.attacks
   let result = advocate.attacks.filter((elem) => arrayPossibleShots.includes(elem));
   if (result.length != 0) {
     const attackPositionIndex = Math.floor(Math.random() * result.length);
     const attackedPosition = result[attackPositionIndex];
-    // consigo el indice para poder borrar ese ataque de advocate.attacks
+    //✅ consigo el indice para poder borrar ese ataque de advocate.attacks
     const disparoAtaque = advocate.attacks.indexOf(attackedPosition);
     advocate.attacks.splice(disparoAtaque,1)
     //printLine("indice disparoAtaque",disparoAtaque)
@@ -135,12 +139,12 @@ function waterHeaddressSunken(advocate, row, col, attacker) {
 
   if (!position.boat) {
     position.icon = setting.UTILS.FAIL;
-    printFailedShot(advocate, row, col, attacker)
+    printAttackerFailedShot(advocate, row, col, attacker)
 
   } else {
     position.boat.lives--;
     position.icon = setting.UTILS.HIT;
-    printHitShot(advocate, row, col, attacker)
+    printAttackerHitShot(advocate, row, col, attacker)
     
     if (!position.boat.lives) {
       searchShipSink(advocate.board, position.boat);
@@ -152,6 +156,8 @@ function waterHeaddressSunken(advocate, row, col, attacker) {
   }
 }
 
+
+//TODO✅ funcion que cuando un barco no tiene vidas cambia los iconos de la longitud de ese barco por el icono de hundido
 /**
  * @param {{icon:string, boat:string}[][]} board
  */
@@ -166,7 +172,7 @@ function searchShipSink(board, boat) {
 }
 
 
-//includes retorna true o false
+//TODO✅ si los iconsShow estan en el tablero los cambio por HIDDEN
 export function obfuscatedBoard(board) {
   let displayBoard = {};
   for (let row = 0; row < board.length; row++) {
@@ -174,7 +180,7 @@ export function obfuscatedBoard(board) {
     displayBoard[letters] = [];
     for (let col = 0; col < board[row].length; col++) {
       const position = board[row][col];
-      if (!iconsShow.includes(position.icon)) {
+      if (!iconsShow.includes(position.icon)) {        // "NOTA PARA MI" includes retorna true o false
         displayBoard[letters][col] = setting.UTILS.HIDDEN;
       } else {
         displayBoard[letters][col] = position.icon;
@@ -183,7 +189,7 @@ export function obfuscatedBoard(board) {
   }
   console.table(displayBoard);
 }
-
+//TODO esta función solo la uso para pintar el tablero vacío al inicio del juego, 👀MIRAR SI PUEDO REFACTORIZARLA CON LA OTRA QUE TENGO
 export function paintBoardIcons(board) {
   let displayBoard = [];
   for (let row = 0; row < board.length; row++) {
@@ -205,19 +211,10 @@ export function isVictory(attacker, advocate) {
   const livesPlayer1 = attacker.calculateLivesShips();
   const livesPlayer2 = advocate.calculateLivesShips();
   if (livesPlayer1 < livesPlayer2) {
-    console.log(`Gana ${advocate.name}`);
-    printLine("");
-    printLine(`Tablero de ${advocate.name}`)
-    paintBoardLetters(advocate.board)
-    printLine(`---Tablero ofuscado de ${attacker.name}---`)
-    obfuscatedBoard(attacker.board);
+    defenderWins(advocate,attacker)
+   
   } else if (livesPlayer2 < livesPlayer1) {
-    console.log(`Gana ${attacker.name}`);
-    printLine("");
-    printLine(`Tablero de ${attacker.name}`)
-    paintBoardLetters(attacker.board)
-    printLine(`---Tablero ofuscado de ${advocate.name}---`)
-    obfuscatedBoard(advocate.board);
+    attackerWins(advocate,attacker)
   } else {
     printLine(`Hay empate entre ${attacker.name} (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets})`, ` y ${advocate.name} (Vidas: ${advocate.calculateLivesShips()} Balas: ${advocate.bullets})`);
   }

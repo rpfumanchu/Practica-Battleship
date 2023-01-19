@@ -1,4 +1,4 @@
-import { setting, BOATS } from "./setting.js";
+import { setting,BOATS } from "./setting.js";
 import { initializeArrayAttacks } from "./function.js";
 
 export class Players {
@@ -7,12 +7,10 @@ export class Players {
     /** @type {{icon:string, boat:{name: string, icon:string, lives: number, LENGTH: number}}[][]} */
     this.board = [];
     /** @type {{name: string, icon:string, lives: number, LENGTH: number}[]} */
-    this.barcos = [];
+    this.ships = [];
     this.bullets = setting.UTILS.MAX_BULLETS;
-
     /** @type {string[]} */
     this.attacks = initializeArrayAttacks();
-
     this.initializeClass();
   }
 
@@ -35,12 +33,10 @@ export class Players {
   }
 
   calculateLivesShips() {
-    const vidas_barcos_mapped = this.barcos.map((boat) => boat.lives);
-    const total_vidas = vidas_barcos_mapped.reduce(
-      (anterior, actual) => anterior + actual,
-      0
-    );
-    return total_vidas;
+    const livesBoatsMapped = this.ships.map((boat) => boat.lives);
+    const totalLives = livesBoatsMapped.reduce(
+      (anterior, actual) => anterior + actual,0);
+    return totalLives;
   }
 
   createBoard() {
@@ -55,45 +51,45 @@ export class Players {
 
   playerShips() {
     BOATS.forEach((elem) => {
-      const barco_actual = elem;
-      for (let j = 0; j < barco_actual.count; j++) {
-        var boat = {
-          name: `${barco_actual.name} #${j}`,
-          icon: barco_actual.icon,
-          lives: barco_actual.lives,
-          LENGTH: barco_actual.LENGTH,
+      const currentShip = elem;
+      for (let j = 0; j < currentShip.count; j++) {
+        let boat = {
+          name: `${currentShip.name} #${j}`,
+          icon: currentShip.icon,
+          lives: currentShip.lives,
+          LENGTH: currentShip.LENGTH,
         };
-        this.barcos.push(boat);
+        this.ships.push(boat);
       }
     });
   }
 
-  createBoat(barquito) {
-    let barcoCreado = false;
-    while (!barcoCreado) {
-      let direccion2 = this.direction();
-      let posicionesValidas;
-      if (direccion2 == 0) {
-        posicionesValidas = this.horizontalValidPositions(barquito);
+  createBoat(allShips) {
+    let boatCreated = false;
+    while (!boatCreated) {
+      let directionRandom = this.direction();
+      let validPositions;
+      if (directionRandom == 0) {
+        validPositions = this.horizontalValidPositions(allShips);
       } else {
-        posicionesValidas = this.verticalValidPositions(barquito);
+        validPositions = this.verticalValidPositions(allShips);
       }
-      if (posicionesValidas.length == barquito.LENGTH) {
-        barcoCreado = true;
-        for (let i = 0; i < posicionesValidas.length; i++) {
-          const icon = barquito.icon;
-          const position = posicionesValidas[i];
+      if (validPositions.length == allShips.LENGTH) {
+        boatCreated = true;
+        for (let i = 0; i < validPositions.length; i++) {
+          const icon = allShips.icon;
+          const position = validPositions[i];
           position.icon = icon;
-          position.boat = barquito;
+          position.boat = allShips;
         }
       }
     }
   }
 
   createAllShips() {
-    for (let i = 0; i < this.barcos.length; i++) {
-      let barquito = this.barcos[i];
-      this.createBoat(barquito);
+    for (let i = 0; i < this.ships.length; i++) {
+      let allShips = this.ships[i];
+      this.createBoat(allShips);
     }
   }
 
@@ -102,35 +98,35 @@ export class Players {
   }
 
   /**
-   * @param {{name: string;icon: string; lives: number;LENGTH: number;}} barquito
+   * @param {{name: string;icon: string; lives: number;LENGTH: number;}} allShips
    */
-  verticalValidPositions(barquito) {
-    let posicionesValidas = [];
+  verticalValidPositions(allShips) {
+    let validPositions = [];
     const col = Math.floor(Math.random() * this.board.length);
     const row = Math.floor(
-      Math.random() * (this.board.length - barquito.LENGTH + 1)
+      Math.random() * (this.board.length - allShips.LENGTH + 1)
     );
-    for (let i = 0; i < barquito.LENGTH; i++) {
+    for (let i = 0; i < allShips.LENGTH; i++) {
       const position = this.board[row + i][col];
       if (!position.boat) {
-        posicionesValidas.push(position);
+        validPositions.push(position);
       }
     }
-    return posicionesValidas;
+    return validPositions;
   }
 
-  horizontalValidPositions(barquito) {
-    let posicionesValidas = [];
+  horizontalValidPositions(allShips) {
+    let validPositions = [];
     const row = Math.floor(Math.random() * this.board.length);
     const col = Math.floor(
-      Math.random() * (this.board.length - barquito.LENGTH + 1)
+      Math.random() * (this.board.length - allShips.LENGTH + 1)
     );
-    for (let i = 0; i < barquito.LENGTH; i++) {
+    for (let i = 0; i < allShips.LENGTH; i++) {
       const position = this.board[row][col + i];
       if (!position.boat) {
-        posicionesValidas.push(position);
+        validPositions.push(position);
       }
     }
-    return posicionesValidas;
+    return validPositions;
   }
 }
