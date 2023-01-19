@@ -10,12 +10,12 @@ const player2 = new Players("Rober");
 
 export async function play() {
     printPresentationGame(player1,player2)
-  await waitSeconds(1);
+  await waitSeconds(5);
 }
 
 export async function loop() {
   let turno = 0;
-  printLine(turno);
+  //printHeading(`TURNO: ${turno}`);
   let attacker;
   let advocate;
 
@@ -38,7 +38,7 @@ export async function loop() {
 async function turno_player(attacker, advocate) {
   printLine(`Ataca: ${attacker.name}(Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets})`,`Defiende: ${advocate.name} (Vidas: ${advocate.calculateLivesShips()} Balas: ${advocate.bullets})`);
   attack(attacker, advocate);
-  await waitSeconds(0);
+  await waitSeconds(1);
 }
 
 async function waitSeconds(seconds) {

@@ -55,7 +55,7 @@ export function attack(attacker, advocate) {
   if (!attacker.bulletsRemain()) return;
   if (!advocate.calculateLivesShips()) return;
 
-  console.log("disparos que quedan antes de disparo", advocate.attacks);
+  //console.log("disparos que quedan antes de disparo", advocate.attacks);
   const attackPositionIndex = Math.floor(Math.random() * advocate.attacks.length);
   const attackedPosition = advocate.attacks[attackPositionIndex];
   advocate.attacks.splice(attackPositionIndex, 1);
@@ -105,9 +105,7 @@ function smartAttack(row, col, attacker, advocate) {
   //console.log()
   //console.log("arrayposDis",arrayPossibleShots);
   //✅ necesito los posibles disparos que quedan en advocate.attacks
-  const result = advocate.attacks.filter((elem) =>
-    arrayPossibleShots.includes(elem)
-  );
+  const result = advocate.attacks.filter((elem) =>arrayPossibleShots.includes(elem));
   if (result.length != 0) {
     const attackPositionIndex = Math.floor(Math.random() * result.length);
     const attackedPosition = result[attackPositionIndex];
@@ -153,13 +151,11 @@ function waterHeaddressSunken(advocate, row, col, attacker) {
 
     if (!position.boat.lives) {
       searchShipSink(advocate.board, position.boat);
-      printLine(
-        `${position.boat.name} position: ${rowToASCII(row)} | ${col} Hundido 🔥`
-      );
+      printLine(`${position.boat.name} position: ${rowToASCII(row)} | ${col} Hundido 🔥`);
       attack(attacker, advocate);
     } else {
-      attack(attacker, advocate);
-      //smartAttack(row, col, attacker, advocate);
+      //attack(attacker, advocate);
+      smartAttack(row, col, attacker, advocate);
     }
   }
 }
