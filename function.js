@@ -38,9 +38,9 @@ export function rowToASCII(row) {
  * @return {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}[]}
  */
 export function getPossiblePositionsToShoot(board) {
-  const flat_board = board.flat();
-  const filtered_board = flat_board.filter(position => !iconsShow.includes(position.icon));
-  return filtered_board;
+  const flatBoard = board.flat();
+  const filteredBoard = flatBoard.filter(position => !iconsShow.includes(position.icon));
+  return filteredBoard;
 } 
 
 //DONE funcion que usa un array con todos los disparos, seleccionando uno al azar y al atacar borra ese disparo del array
