@@ -1,4 +1,4 @@
-import { setting,BOATS } from "./setting.js";
+import { setting, BOATS } from "./setting.js";
 import { initializeArrayAttacks } from "./function.js";
 
 //DONE
@@ -37,8 +37,7 @@ export class Players {
   //DONE necesito saber las vidas de los barcos para más tarde poder restarle esas vidas
   calculateLivesShips() {
     const livesBoatsMapped = this.ships.map((ship) => ship.lives);
-    const totalLives = livesBoatsMapped.reduce(
-      (prev, curr) => prev + curr,0);
+    const totalLives = livesBoatsMapped.reduce((prev, curr) => prev + curr, 0);
     return totalLives;
   }
 
@@ -69,7 +68,6 @@ export class Players {
     });
   }
 
-
   //DONE me aseguro que los barcos no se pisan entre si
   createShip(ship) {
     let shipCreated = false;
@@ -95,15 +93,10 @@ export class Players {
 
   //DONE pinto todos los barcos
   createAllShips() {
-    this.ships.forEach((elem) => {
-      const ship = elem
+    this.ships.forEach((ship) => {
       this.createShip(ship);
-    })
-    // for (let i = 0; i < this.ships.length; i++) {
-    //   const ship = this.ships[i];
-      //this.createShip(ship);
-    }
-  //}
+    });
+  }
 
   //DONE número aleatorio entre 0 y 1 para posteriormente identificar dirección
   direction() {
@@ -117,7 +110,9 @@ export class Players {
   verticalValidPositions(ship) {
     const validPositions = [];
     const col = Math.floor(Math.random() * this.board.length);
-    const row = Math.floor(Math.random() * (this.board.length - ship.LENGTH + 1));
+    const row = Math.floor(
+      Math.random() * (this.board.length - ship.LENGTH + 1)
+    );
     for (let i = 0; i < ship.LENGTH; i++) {
       const position = this.board[row + i][col];
       if (!position.ship) {
@@ -134,7 +129,9 @@ export class Players {
   horizontalValidPositions(ship) {
     const validPositions = [];
     const row = Math.floor(Math.random() * this.board.length);
-    const col = Math.floor(Math.random() * (this.board.length - ship.LENGTH + 1));
+    const col = Math.floor(
+      Math.random() * (this.board.length - ship.LENGTH + 1)
+    );
     for (let i = 0; i < ship.LENGTH; i++) {
       const position = this.board[row][col + i];
       if (!position.ship) {

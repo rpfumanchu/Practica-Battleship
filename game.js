@@ -1,7 +1,7 @@
 import { Players } from "./player.js";
 import { attack, isVictory, randomPlayer } from "./function.js";
-import { printHeading, printLine, printPresentationGame } from "./printer.js";
-import { times, } from "./setting.js";
+import {printHeading,printPresentationGame,printPlayerTurn,} from "./printer.js";
+import { times } from "./setting.js";
 
 const player1 = new Players("Alina");
 const player2 = new Players("Rober");
@@ -13,14 +13,14 @@ export async function play() {
 }
 
 export async function loop() {
-  let turno = 0;
+  let round = 0;
   let attacker;
   let defender;
   let { startAttacking, startDefending } = randomPlayer(player1, player2);
 
   while (player1.keepPlaying() && player2.keepPlaying()) {
-    turno++;
-    printHeading(`TURNO: ${turno}`);
+    round++;
+    printHeading(`RONDA: ${round}`);
     attacker = startAttacking;
     defender = startDefending;
 
@@ -31,12 +31,12 @@ export async function loop() {
       await playerTurn(attacker, defender);
     }
   }
-  printHeading(`El juego ha terminado en el turno ${turno} y el ganador es.....`);
+  printHeading(`El juego ha terminado en la ronda ${round} y el ganador es.....`);
   isVictory(attacker, defender);
 }
 
 async function playerTurn(attacker, defender) {
-  printLine(`Ataca: ${attacker.name} (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets})`,`|| Defiende: ${defender.name} (Vidas: ${defender.calculateLivesShips()} Balas: ${defender.bullets})`);
+  printPlayerTurn(attacker, defender);
   attack(attacker, defender);
   await waitSeconds(times.timePromisesTurns);
 }

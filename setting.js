@@ -2,7 +2,7 @@ export const setting = {
   UTILS: {
     ROWS: 10,
     COLS: 10,
-    MAX_BULLETS: 100,
+    MAX_BULLETS: 10,
     HIT: "💥",
     FAIL: "💦",
     HIDDEN: "❓", 

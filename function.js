@@ -1,26 +1,19 @@
 import { setting, iconsShow } from "./setting.js";
-import {
-  printLine,
-  printAttackerHitShot,
-  printAttackerFailedShot,
-  technicalWinner,
-  attackerWins,
-  tie
-} from "./printer.js";
+import {printLine,printAttackerHitShot,printAttackerFailedShot,technicalWinner,attackerWins,tie,} from "./printer.js";
 
 /**
  * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null}[][]} board
  */
-export function paintBoardLetters(board,emptyCell = false) {
+export function paintBoardLetters(board, emptyCell = false) {
   const showBoard = [];
   for (let row = 0; row < board.length; row++) {
     const letters = rowToASCII(row);
     showBoard[letters] = [];
     for (let col = 0; col < board.length; col++) {
       if (emptyCell) {
-        showBoard[letters][col] = setting.UTILS.EMPTY
-      }else {
-        showBoard[letters][col] = board[row][col].icon; 
+        showBoard[letters][col] = setting.UTILS.EMPTY;
+      } else {
+        showBoard[letters][col] = board[row][col].icon;
       }
     }
   }
@@ -35,11 +28,11 @@ export function rowToASCII(row) {
 //DONE un array con 100 disparos en este caso, si cambiara el tamaño del tablero cambiaría el arrayAttacks también
 //NOTE "nota para mi" uso pasStart par que del 0 al 9 sean dos caracteres "00, 01 etc" lo necesito así
 export function initializeArrayAttacks() {
-  const boardSize =  setting.UTILS.ROWS * setting.UTILS.COLS
+  const boardSize = setting.UTILS.ROWS * setting.UTILS.COLS;
   const arrayAttacks = [];
   const cell = "";
   for (var i = 0; i < boardSize; i++) {
-   const cell = `${i}`.padStart(2, "0");
+    const cell = `${i}`.padStart(2, "0");
     arrayAttacks.push(cell);
   }
   return arrayAttacks;
@@ -51,23 +44,24 @@ export function initializeArrayAttacks() {
  * @param {Players} defender
  */
 export function attack(attacker, defender) {
-  // para evitar que continue cuando el defender no tiene más posiciones donde atacar
+  //NOTE para evitar que continue cuando el defender no tiene más posiciones donde atacar
   if (!defender.attacks.length) return;
   if (!attacker.bulletsRemain()) return;
   if (!defender.calculateLivesShips()) return;
 
-  console.log("disparos que quedan antes de disparo", defender.attacks);
-  const attackPositionIndex = Math.floor(Math.random() * defender.attacks.length);
+  //console.log("disparos que quedan antes de disparo", defender.attacks);
+  const attackPositionIndex = Math.floor(
+    Math.random() * defender.attacks.length
+  );
   const attackedPosition = defender.attacks[attackPositionIndex];
   defender.attacks.splice(attackPositionIndex, 1);
 
   const row = attackedPosition[0];
   const col = attackedPosition[1];
-  console.log("disparo ataque normal",attackedPosition)
-  console.log("row", attackedPosition[0]);
-  console.log("col", attackedPosition[1]);
-  console.log("disparos que quedan",defender.attacks);
-
+  //console.log("disparo ataque normal", attackedPosition);
+  //console.log("row", attackedPosition[0]);
+  //console.log("col", attackedPosition[1]);
+  //console.log("disparos que quedan", defender.attacks);
   waterTouchedSunken(defender, row, col, attacker);
 }
 
@@ -101,23 +95,25 @@ function smartAttack(row, col, attacker, defender) {
   //NOTE izquierda (col = col-1, row = row)
   if (col > 0) arrayPossibleShots.push(`${row}${col - 1}`);
 
-  console.log("disparos que quedan antes de disparo",defender.attacks);
-  console.log()
-  console.log("arrayposDis",arrayPossibleShots);
+ //console.log("disparos que quedan antes de disparo", defender.attacks);
+  //console.log();
+  //console.log("arrayposDis", arrayPossibleShots);
   //DONE necesito los posibles disparos que quedan en defender.attacks
-  const result = defender.attacks.filter((elem) =>arrayPossibleShots.includes(elem));
+  const result = defender.attacks.filter((elem) =>
+    arrayPossibleShots.includes(elem)
+  );
   if (result.length != 0) {
     const attackPositionIndex = Math.floor(Math.random() * result.length);
     const attackedPosition = result[attackPositionIndex];
     //DONE   consigo el indice para poder borrar ese ataque de defender.attacks
     const shotAttack = defender.attacks.indexOf(attackedPosition);
     defender.attacks.splice(shotAttack, 1);
-    printLine("indice shotAttack",shotAttack)
-    printLine("posibles disparos filtrados", result);
+    //printLine("indice shotAttack", shotAttack);
+    //printLine("posibles disparos filtrados", result);
     row = attackedPosition[0];
     col = attackedPosition[1];
-    printLine("position atacada ataque listo",attackedPosition)
-    printLine("disparos que quedan",defender.attacks)
+    //printLine("position atacada ataque listo", attackedPosition);
+    //printLine("disparos que quedan", defender.attacks);
     waterTouchedSunken(defender, row, col, attacker);
   } else {
     attack(attacker, defender);
@@ -143,7 +139,7 @@ function waterTouchedSunken(defender, row, col, attacker) {
   } else {
     position.ship.lives--;
     position.icon = setting.UTILS.HIT;
-    printAttackerHitShot(defender, row, col, attacker,position.ship);
+    printAttackerHitShot(defender, row, col, attacker, position.ship);
 
     if (!position.ship.lives) {
       searchShipSink(defender.board, position.ship);
@@ -177,8 +173,8 @@ export function obfuscatedBoard(board) {
     displayBoard[letters] = [];
     for (let col = 0; col < board[row].length; col++) {
       const position = board[row][col];
+      //NOTE "NOTA PARA MI" includes retorna true o false
       if (!iconsShow.includes(position.icon)) {
-        // "NOTA PARA MI" includes retorna true o false
         displayBoard[letters][col] = setting.UTILS.HIDDEN;
       } else {
         displayBoard[letters][col] = position.icon;
@@ -197,17 +193,17 @@ export function isVictory(attacker, defender) {
   const livesAttacker = attacker.calculateLivesShips();
   const livesDefender = defender.calculateLivesShips();
   if (livesDefender == 0) {
-    attackerWins(attacker,defender);
-  } else if (livesDefender < livesAttacker){
-    technicalWinner(attacker,defender);
-  } else if (livesAttacker < livesDefender){
+    attackerWins(attacker, defender);
+  } else if (livesDefender < livesAttacker) {
+    technicalWinner(attacker, defender);
+  } else if (livesAttacker < livesDefender) {
     technicalWinner(defender, attacker);
-  }else {
-    tie(attacker,defender)
+  } else {
+    tie(attacker, defender);
   }
 }
 //DONE quiero que en cada ejecución el turno del jugador que empiza atacando sea aleatorio
-export function randomPlayer(player1,player2) {
+export function randomPlayer(player1, player2) {
   let startAttacking;
   let startDefending;
   const numRandom = Math.floor(Math.random() * 2);
@@ -220,5 +216,3 @@ export function randomPlayer(player1,player2) {
   }
   return { startAttacking, startDefending };
 }
-
-

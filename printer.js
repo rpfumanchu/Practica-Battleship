@@ -33,10 +33,11 @@ export function printPresentationGame(player1, player2) {
   paintBoardLetters(player2.board);
   printLine("");
   printHeading("Comienza el juego");
+  printLine("");
 }
 
 export function printAttackerFailedShot(defender, row, col, attacker) {
-  printLine(`     Tablero de ${attacker.name}`);
+  printLine(`Tablero de ${attacker.name}`);
   paintBoardLetters(attacker.board);
   printLine(` ${attacker.name} Apunta y Dispara`);
   printLine(` UPSSS!!! Agua 💦 en la posición: ${rowToASCII(row)} | ${col}`);
@@ -46,7 +47,7 @@ export function printAttackerFailedShot(defender, row, col, attacker) {
 }
 
 export function printAttackerHitShot(defender, row, col, attacker, ship) {
-  printLine(`     Tablero de ${attacker.name}`);
+  printLine(`Tablero de ${attacker.name}`);
   paintBoardLetters(attacker.board);
   printLine(` ${attacker.name} Apunta y Dispara`);
   printLine(`💥 Tocado en la position: ${rowToASCII(row)} | ${col}`);
@@ -59,24 +60,31 @@ export function printAttackerHitShot(defender, row, col, attacker, ship) {
   printLine(`¡¡¡${attacker.name} despues de disparar te quedan ${attacker.bullets} Balas!!!`);
 }
 
+export function printPlayerTurn(attacker, defender) {
+  printLine(`Ahora es el turno de ${attacker.name}.....`)
+  printLine(`Ataca: ${attacker.name} (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets})`,`|| Defiende: ${defender.name} (Vidas: ${defender.calculateLivesShips()} Balas: ${defender.bullets})`);
+}
+
 export function attackerWins(attacker, defender) {
   printLine(`=================!!!!!!!!!!!!!!!!!!!!!!!Gana por K.O ${attacker.name}¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡================`);
-  printLine(`Tablero de ${attacker.name}`);
+  printLine(`Ganador: ${attacker.name} con (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets})`,`|| Perdedor: ${defender.name} con (Vidas: ${defender.calculateLivesShips()} Balas: ${defender.bullets})`);
+  printLine(`Tablero de ${attacker.name} (Ganador)`);
   paintBoardLetters(attacker.board);
-  printLine(`Tablero de ${defender.name}`);
+  printLine(`Tablero de ${defender.name} (Perdedor)`);
   paintBoardLetters(defender.board);
 }
 
 export function technicalWinner(winner, loser) {
   printLine(`===================!!!!!!!!!!!!!!!!!!!Ganador Técnico ${winner.name}¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡===================`);
-  printLine(`Tablero de ${winner.name}`);
+  printLine(`Ganador: ${winner.name} con (Vidas: ${winner.calculateLivesShips()} Balas: ${winner.bullets})`,`|| Perdedor: ${loser.name} con (Vidas: ${loser.calculateLivesShips()} Balas: ${loser.bullets})`);
+  printLine(`Tablero de ${winner.name} (Ganador)`);
   paintBoardLetters(winner.board);
-  printLine(`Tablero de ${loser.name}`);
+  printLine(`Tablero de ${loser.name} (Perdedor)`);
   paintBoardLetters(loser.board);
 }
 
 export function tie(attacker, defender) {
-  printLine(`============Hay empate entre ${attacker.name} (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets}`,` y ${defender.name}(Vidas: ${defender.calculateLivesShips()} Balas: ${defender.bullets})===========`);
+  printLine(`============Hay empate entre ${attacker.name} (Vidas: ${attacker.calculateLivesShips()} Balas: ${attacker.bullets}`,` y ${defender.name} (Vidas: ${defender.calculateLivesShips()} Balas: ${defender.bullets})===========`);
   printLine(`Tablero de ${attacker.name}`);
   paintBoardLetters(attacker.board);
   printLine(`Tablero de ${defender.name}`);
