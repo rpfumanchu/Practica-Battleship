@@ -49,7 +49,6 @@ export function attack(attacker, defender) {
   if (!attacker.bulletsRemain()) return;
   if (!defender.calculateLivesShips()) return;
 
-  //console.log("disparos que quedan antes de disparo", defender.attacks);
   const attackPositionIndex = Math.floor(
     Math.random() * defender.attacks.length
   );
@@ -58,10 +57,7 @@ export function attack(attacker, defender) {
 
   const row = attackedPosition[0];
   const col = attackedPosition[1];
-  //console.log("disparo ataque normal", attackedPosition);
-  //console.log("row", attackedPosition[0]);
-  //console.log("col", attackedPosition[1]);
-  //console.log("disparos que quedan", defender.attacks);
+  
   waterTouchedSunken(defender, row, col, attacker);
 }
 
@@ -95,9 +91,6 @@ function smartAttack(row, col, attacker, defender) {
   //NOTE izquierda (col = col-1, row = row)
   if (col > 0) arrayPossibleShots.push(`${row}${col - 1}`);
 
- //console.log("disparos que quedan antes de disparo", defender.attacks);
-  //console.log();
-  //console.log("arrayposDis", arrayPossibleShots);
   //DONE necesito los posibles disparos que quedan en defender.attacks
   const result = defender.attacks.filter((elem) =>
     arrayPossibleShots.includes(elem)
@@ -108,12 +101,8 @@ function smartAttack(row, col, attacker, defender) {
     //DONE   consigo el indice para poder borrar ese ataque de defender.attacks
     const shotAttack = defender.attacks.indexOf(attackedPosition);
     defender.attacks.splice(shotAttack, 1);
-    //printLine("indice shotAttack", shotAttack);
-    //printLine("posibles disparos filtrados", result);
     row = attackedPosition[0];
     col = attackedPosition[1];
-    //printLine("position atacada ataque listo", attackedPosition);
-    //printLine("disparos que quedan", defender.attacks);
     waterTouchedSunken(defender, row, col, attacker);
   } else {
     attack(attacker, defender);
@@ -143,10 +132,10 @@ function waterTouchedSunken(defender, row, col, attacker) {
 
     if (!position.ship.lives) {
       searchShipSink(defender.board, position.ship);
+      //NOTE si lo hundo el siguiente ataque sera norma
       attack(attacker, defender);
     } else {
-      //attack(attacker, defender);
-      smartAttack(row, col, attacker, defender);
+      smartAttack(row, col, attacker, defender);  
     }
   }
 }
