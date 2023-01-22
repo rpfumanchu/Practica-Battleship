@@ -1,17 +1,16 @@
 import { setting, BOATS } from "./setting.js";
-import { initializeArrayAttacks } from "./function.js";
+
 
 //DONE
 export class Players {
   constructor(name) {
     this.name = name;
-    /** @type {{icon:string, ship:{name: string, icon:string, lives: number, LENGTH: number}}[][]} */
+    /** @type {{icon:string, ship:{name: string, icon:string, lives: number, LENGTH: number}, row: number, col: number}[][]} */
     this.board = [];
     /** @type {{name: string, icon:string, lives: number, LENGTH: number}[]} */
     this.ships = [];
     this.bullets = setting.UTILS.MAX_BULLETS;
     /** @type {string[]} */
-    this.attacks = initializeArrayAttacks();
     this.initializeClass();
   }
 
@@ -46,7 +45,7 @@ export class Players {
     for (let i = 0; i < setting.UTILS.ROWS; i++) {
       this.board[i] = [];
       for (let j = 0; j < setting.UTILS.COLS; j++) {
-        const position = { icon: setting.UTILS.EMPTY, ship: null };
+        const position = { icon: setting.UTILS.EMPTY, ship: null, row: i, col: j };
         this.board[i][j] = position;
       }
     }

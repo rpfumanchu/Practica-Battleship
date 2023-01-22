@@ -2,7 +2,6 @@ import {
   obfuscatedBoard,
   paintBoardLetters,
   rowToASCII,
-  //paintBoardIcons
 } from "./function.js";
 import { setting } from "./setting.js";
 
@@ -36,23 +35,23 @@ export function printPresentationGame(player1, player2) {
   printLine("");
 }
 
-export function printAttackerFailedShot(defender, row, col, attacker) {
+export function printAttackerFailedShot(defender, attacker, position) {
   printLine(`Tablero de ${attacker.name}`);
   paintBoardLetters(attacker.board);
   printLine(` ${attacker.name} Apunta y Dispara`);
-  printLine(` UPSSS!!! Agua 💦 en la posición: ${rowToASCII(row)} | ${col}`);
+  printLine(` UPSSS!!! Agua 💦 en la posición: ${rowToASCII(position.row)} | ${position.col}`);
   printLine(`---Tablero ofuscado de ${defender.name}---`);
   obfuscatedBoard(defender.board);
   printLine(`¡¡¡${attacker.name} despues de disparar te quedan ${attacker.bullets} Balas!!!`);
 }
 
-export function printAttackerHitShot(defender, row, col, attacker, ship) {
+export function printAttackerHitShot(defender, attacker, position) {
   printLine(`Tablero de ${attacker.name}`);
   paintBoardLetters(attacker.board);
   printLine(` ${attacker.name} Apunta y Dispara`);
-  printLine(`💥 Tocado en la position: ${rowToASCII(row)} | ${col}`);
-  if (ship.lives == 0) {
-    printLine(`🔥 Has Hundido ${ship.name} position: ${rowToASCII(row)} | ${col} `);
+  printLine(`💥 Tocado en la position: ${rowToASCII(position.row)} | ${position.col}`);
+  if (position.ship.lives == 0) {
+    printLine(`🔥 Has Hundido ${position.ship.name} position: ${rowToASCII(position.row)} | ${position.col} `);
   }
   printLine("¡¡En el blanco!!, vuelve disparar");
   printLine(`---Tablero ofuscado de ${defender.name}---`);

@@ -1,15 +1,22 @@
 import { setting, iconsShow } from "./setting.js";
-import {printLine,printAttackerHitShot,printAttackerFailedShot,technicalWinner,attackerWins,tie,} from "./printer.js";
+import {
+  printLine,
+  printAttackerHitShot,
+  printAttackerFailedShot,
+  technicalWinner,
+  attackerWins,
+  tie
+} from "./printer.js";
 
 /**
- * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null}[][]} board
+ * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}[][]} board
  */
 export function paintBoardLetters(board, emptyCell = false) {
   const showBoard = [];
   for (let row = 0; row < board.length; row++) {
     const letters = rowToASCII(row);
     showBoard[letters] = [];
-    for (let col = 0; col < board.length; col++) {
+    for (let col = 0; col < board[row].length; col++) {
       if (emptyCell) {
         showBoard[letters][col] = setting.UTILS.EMPTY;
       } else {
@@ -19,24 +26,22 @@ export function paintBoardLetters(board, emptyCell = false) {
   }
   console.table(showBoard);
 }
+
 //NOTE esta funcion la uso para cambiar los números de las row por letras en las funciones de los tableros
 export function rowToASCII(row) {
   row = parseInt(row);
   return String.fromCharCode("A".charCodeAt(0) + row);
 }
 
-//DONE un array con 100 disparos en este caso, si cambiara el tamaño del tablero cambiaría el arrayAttacks también
-//NOTE "nota para mi" uso pasStart par que del 0 al 9 sean dos caracteres "00, 01 etc" lo necesito así
-export function initializeArrayAttacks() {
-  const boardSize = setting.UTILS.ROWS * setting.UTILS.COLS;
-  const arrayAttacks = [];
-  const cell = "";
-  for (var i = 0; i < boardSize; i++) {
-    const cell = `${i}`.padStart(2, "0");
-    arrayAttacks.push(cell);
-  }
-  return arrayAttacks;
-}
+/**
+ * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}[][]} board
+ * @return {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}[]}
+ */
+export function getPossiblePositionsToShoot(board) {
+  const flat_board = board.flat();
+  const filtered_board = flat_board.filter(position => !iconsShow.includes(position.icon));
+  return filtered_board;
+} 
 
 //DONE funcion que usa un array con todos los disparos, seleccionando uno al azar y al atacar borra ese disparo del array
 /**
@@ -45,20 +50,14 @@ export function initializeArrayAttacks() {
  */
 export function attack(attacker, defender) {
   //NOTE para evitar que continue cuando el defender no tiene más posiciones donde atacar
-  if (!defender.attacks.length) return;
   if (!attacker.bulletsRemain()) return;
   if (!defender.calculateLivesShips()) return;
 
-  const attackPositionIndex = Math.floor(
-    Math.random() * defender.attacks.length
-  );
-  const attackedPosition = defender.attacks[attackPositionIndex];
-  defender.attacks.splice(attackPositionIndex, 1);
-
-  const row = attackedPosition[0];
-  const col = attackedPosition[1];
+  const possiblePositionsToShoot = getPossiblePositionsToShoot(defender.board);
+  const attackPositionIndex = Math.floor(Math.random() * possiblePositionsToShoot.length);
+  const attackedPosition = possiblePositionsToShoot[attackPositionIndex];
   
-  waterTouchedSunken(defender, row, col, attacker);
+  waterTouchedSunken(defender, attacker, attackedPosition);
 }
 
 //DONE ataque inteligente, necesito las posiciones alrededor de un disparo y comprobar si ya dispare en ellas
@@ -68,9 +67,9 @@ export function attack(attacker, defender) {
  * @param {Players} attacker
  * @param {Players} defender
  */
-function smartAttack(row, col, attacker, defender) {
+function smartAttack(position, attacker, defender) {
+  
   /*NOTE mis guardianesComprobaciones para poder realizar un ataque correctamente.Sirve para no atacar cuando el defender no tiene mas posiciones libres donde realizar el disparo*/
-  if (!defender.attacks.length) return;
   if (!attacker.bulletsRemain()) return;
   if (!defender.calculateLivesShips()) return;
 
@@ -80,69 +79,64 @@ function smartAttack(row, col, attacker, defender) {
   //DONE calculo los posibles disparos alrededor de una posición atacada
 
   //NOTE arriba (col = col, row = row-1)
-  if (row > 0) arrayPossibleShots.push(`${row - 1}${col}`);
+  if (position.row > 0) arrayPossibleShots.push(defender.board[position.row - 1][position.col]);
 
   //NOTE derecha (col = col+1, row = row)
-  if (col < maxColIndex) arrayPossibleShots.push(`${row}${col + 1}`);
+  if (position.col < maxColIndex) arrayPossibleShots.push(defender.board[position.row][position.col + 1]);
 
   //NOTE abajo (col = col, row = row+1)
-  if (row < maxRowIndex) arrayPossibleShots.push(`${row + 1}${col}`);
+  if (position.row < maxRowIndex) arrayPossibleShots.push(defender.board[position.row + 1][position.col]);
 
   //NOTE izquierda (col = col-1, row = row)
-  if (col > 0) arrayPossibleShots.push(`${row}${col - 1}`);
+  if (position.col > 0) arrayPossibleShots.push(defender.board[position.row][position.col - 1]);
 
-  //DONE necesito los posibles disparos que quedan en defender.attacks
-  const result = defender.attacks.filter((elem) =>
-    arrayPossibleShots.includes(elem)
-  );
+  const possiblePositionsToShoot = getPossiblePositionsToShoot(defender.board);
+
+  //DONE necesito los posibles disparos que quedan en el tablero del defensor
+  const result = possiblePositionsToShoot.filter(posicion => arrayPossibleShots.includes(posicion));
+
   if (result.length != 0) {
     const attackPositionIndex = Math.floor(Math.random() * result.length);
     const attackedPosition = result[attackPositionIndex];
-    //DONE   consigo el indice para poder borrar ese ataque de defender.attacks
-    const shotAttack = defender.attacks.indexOf(attackedPosition);
-    defender.attacks.splice(shotAttack, 1);
-    row = attackedPosition[0];
-    col = attackedPosition[1];
-    waterTouchedSunken(defender, row, col, attacker);
+    
+    waterTouchedSunken(defender, attacker, attackedPosition);
   } else {
     attack(attacker, defender);
   }
 }
 
 /*DONE Necesito que al atacar una posicion si es agua cambie el iconoSi toco barco lo mismo pero con su icono correspondiente. Además si tocas barco o lo hundes vuelves a disparar. Si es hundido cambiar el icono a hundido en toda la representacion del barco*/
-
 /**
  * @param {Players} attacker
  * @param {Players} defender
+ * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}} position
  */
-function waterTouchedSunken(defender, row, col, attacker) {
-  row = parseInt(row);
-  col = parseInt(col);
-  const position = defender.board[row][col];
+function waterTouchedSunken(defender, attacker, position) {
   //✅ resto una vida por cada disparo
   attacker.subtractBullets();
 
   if (!position.ship) {
     position.icon = setting.UTILS.FAIL;
-    printAttackerFailedShot(defender, row, col, attacker);
+    printAttackerFailedShot(defender, attacker, position);
   } else {
     position.ship.lives--;
     position.icon = setting.UTILS.HIT;
-    printAttackerHitShot(defender, row, col, attacker, position.ship);
+    printAttackerHitShot(defender, attacker, position);
 
     if (!position.ship.lives) {
       searchShipSink(defender.board, position.ship);
       //NOTE si lo hundo el siguiente ataque sera norma
       attack(attacker, defender);
     } else {
-      smartAttack(row, col, attacker, defender);  
+      smartAttack(position, attacker, defender);  
     }
   }
 }
 
 //DONE funcion que cuando un barco no tiene vidas cambia los iconos de la longitud de ese barco por el icono de hundido
 /**
- * @param {{icon:string, ship:string}[][]} board
+ * @param {{icon:string, ship: {name: string, icon:string, lives: number, LENGTH: number} | null, row: number, col: number}[][]} board
+ * @param {{name: string, icon:string, lives: number, LENGTH: number} | null} ship
  */
 function searchShipSink(board, ship) {
   for (let row = 0; row < board.length; row++) {
