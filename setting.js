@@ -5,10 +5,13 @@ export const setting = {
     MAX_BULLETS: 100,
     HIT: "💥",
     FAIL: "💦",
-    HIDDEN: "❓", ///💤❌💣🩸⚓🏴‍☠️🕋🔥🛫⛵🚤🚢💢
+    HIDDEN: "❓", 
     SUNKEN: "🔥",
     EMPTY: "  ",
   },
+};
+
+const shipsMold = {
   SHIPS: {
     lancha: {
       name: "Lancha motora",
@@ -24,7 +27,12 @@ export const setting = {
       LENGTH: 2,
       lives: 2,
     },
-    submarino: { name: "US 58", icon: "🚤", count: 2, LENGTH: 3, lives: 3 },
+    submarino: { 
+      name: "Submarino US 58", 
+      icon: "🚤", 
+      count: 2, 
+      LENGTH: 3, 
+      lives: 3 },
     buque: {
       name: "Buque de gerra",
       icon: "🕋",
@@ -40,14 +48,14 @@ export const setting = {
       lives: 5,
     },
   },
-};
+}
 
 export const BOATS = [
-  setting.SHIPS.lancha,
-  setting.SHIPS.crucero,
-  setting.SHIPS.submarino,
-  setting.SHIPS.buque,
-  setting.SHIPS.portaaviones,
+  shipsMold.SHIPS.lancha,
+  shipsMold.SHIPS.crucero,
+  shipsMold.SHIPS.submarino,
+  shipsMold.SHIPS.buque,
+  shipsMold.SHIPS.portaaviones,
 ];
 
 export const iconsShow = [
@@ -55,3 +63,9 @@ export const iconsShow = [
   setting.UTILS.SUNKEN,
   setting.UTILS.HIT,
 ];
+
+export const times = {
+  timePromisesPresentation : 1,
+  timePromisesTurns : 0
+}
+

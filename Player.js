@@ -1,11 +1,11 @@
 import { setting,BOATS } from "./setting.js";
 import { initializeArrayAttacks } from "./function.js";
 
-//TODO✅
+//DONE
 export class Players {
   constructor(name) {
     this.name = name;
-    /** @type {{icon:string, boat:{name: string, icon:string, lives: number, LENGTH: number}}[][]} */
+    /** @type {{icon:string, ship:{name: string, icon:string, lives: number, LENGTH: number}}[][]} */
     this.board = [];
     /** @type {{name: string, icon:string, lives: number, LENGTH: number}[]} */
     this.ships = [];
@@ -34,106 +34,110 @@ export class Players {
     this.createAllShips();
   }
 
-  //TODO✅ necesito saber las vidas de los barcos para más tarde poder restarle esas vidas
+  //DONE necesito saber las vidas de los barcos para más tarde poder restarle esas vidas
   calculateLivesShips() {
-    const livesBoatsMapped = this.ships.map((boat) => boat.lives);
+    const livesBoatsMapped = this.ships.map((ship) => ship.lives);
     const totalLives = livesBoatsMapped.reduce(
-      (anterior, actual) => anterior + actual,0);
+      (prev, curr) => prev + curr,0);
     return totalLives;
   }
 
-  //TODO✅
+  //DONE creo un tablero 2d
   createBoard() {
     for (let i = 0; i < setting.UTILS.ROWS; i++) {
       this.board[i] = [];
       for (let j = 0; j < setting.UTILS.COLS; j++) {
-        const position = { icon: setting.UTILS.EMPTY, boat: null };
+        const position = { icon: setting.UTILS.EMPTY, ship: null };
         this.board[i][j] = position;
       }
     }
   }
 
-  //TODO✅
+  //DONE molde para los barcos con las propiedades que me interesan
   playerShips() {
     BOATS.forEach((elem) => {
       const currentShip = elem;
       for (let j = 0; j < currentShip.count; j++) {
-        const boat = {
+        const ship = {
           name: `${currentShip.name} #${j}`,
           icon: currentShip.icon,
           lives: currentShip.lives,
           LENGTH: currentShip.LENGTH,
         };
-        this.ships.push(boat);
+        this.ships.push(ship);
       }
     });
   }
 
 
-  //TODO ✅
-  createBoat(allShips) {
-    let boatCreated = false;
-    while (!boatCreated) {
+  //DONE me aseguro que los barcos no se pisan entre si
+  createShip(ship) {
+    let shipCreated = false;
+    while (!shipCreated) {
       const directionRandom = this.direction();
       let validPositions;
       if (directionRandom == 0) {
-        validPositions = this.horizontalValidPositions(allShips);
+        validPositions = this.horizontalValidPositions(ship);
       } else {
-        validPositions = this.verticalValidPositions(allShips);
+        validPositions = this.verticalValidPositions(ship);
       }
-      if (validPositions.length == allShips.LENGTH) {
-        boatCreated = true;
+      if (validPositions.length == ship.LENGTH) {
+        shipCreated = true;
         for (let i = 0; i < validPositions.length; i++) {
-          const icon = allShips.icon;
+          const icon = ship.icon;
           const position = validPositions[i];
           position.icon = icon;
-          position.boat = allShips;
+          position.ship = ship;
         }
       }
     }
   }
 
-  //TODO✅
+  //DONE pinto todos los barcos
   createAllShips() {
-    for (let i = 0; i < this.ships.length; i++) {
-      const allShips = this.ships[i];
-      this.createBoat(allShips);
+    this.ships.forEach((elem) => {
+      const ship = elem
+      this.createShip(ship);
+    })
+    // for (let i = 0; i < this.ships.length; i++) {
+    //   const ship = this.ships[i];
+      //this.createShip(ship);
     }
-  }
+  //}
 
-  //TODO✅ número aleatorio entre 0 y 1 para posteriormente identificar dirección
+  //DONE número aleatorio entre 0 y 1 para posteriormente identificar dirección
   direction() {
     return Math.floor(Math.random() * 2);
   }
 
-  //TODO✅ posiciones verticales válidas y aleatorias
+  //DONE posiciones verticales válidas y aleatorias
   /**
    * @param {{name: string;icon: string; lives: number;LENGTH: number;}} allShips
    */
-  verticalValidPositions(allShips) {
+  verticalValidPositions(ship) {
     const validPositions = [];
     const col = Math.floor(Math.random() * this.board.length);
-    const row = Math.floor(Math.random() * (this.board.length - allShips.LENGTH + 1));
-    for (let i = 0; i < allShips.LENGTH; i++) {
+    const row = Math.floor(Math.random() * (this.board.length - ship.LENGTH + 1));
+    for (let i = 0; i < ship.LENGTH; i++) {
       const position = this.board[row + i][col];
-      if (!position.boat) {
+      if (!position.ship) {
         validPositions.push(position);
       }
     }
     return validPositions;
   }
 
-  //TODO✅ posiciones horizontales válidas y aleatorias
+  //DONE posiciones horizontales válidas y aleatorias
   /**
    * @param {{name: string;icon: string; lives: number;LENGTH: number;}} allShips
    */
-  horizontalValidPositions(allShips) {
+  horizontalValidPositions(ship) {
     const validPositions = [];
     const row = Math.floor(Math.random() * this.board.length);
-    const col = Math.floor(Math.random() * (this.board.length - allShips.LENGTH + 1));
-    for (let i = 0; i < allShips.LENGTH; i++) {
+    const col = Math.floor(Math.random() * (this.board.length - ship.LENGTH + 1));
+    for (let i = 0; i < ship.LENGTH; i++) {
       const position = this.board[row][col + i];
-      if (!position.boat) {
+      if (!position.ship) {
         validPositions.push(position);
       }
     }
