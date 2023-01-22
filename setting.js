@@ -65,7 +65,7 @@ export const iconsShow = [
 ];
 
 export const times = {
-  timePromisesPresentation : 1,
-  timePromisesTurns : 0
+  timePromisesPresentation : 5,
+  timePromisesTurns : 1
 }
 
